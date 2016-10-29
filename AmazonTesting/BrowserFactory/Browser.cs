@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,15 @@ namespace AmazonTesting.BrowserFactory
 {
     class Browser
     {
-        protected IWebDriver driver;
+        private IWebDriver driver;
 
-        protected WebDriverWait wait;
+        private WebDriverWait wait;
 
-        protected Actions actions;
+        private Actions actions;
 
-        private static Dictionary<String, IWebDriver> drivers = new Dictionary<string, IWebDriver>();
+        private DesiredCapabilities dc;
+
+        private Dictionary<String, IWebDriver> drivers = new Dictionary<string, IWebDriver>();
             public IWebDriver getDriver(String browserName) {
             IWebDriver driver = null;
 
@@ -38,7 +41,7 @@ namespace AmazonTesting.BrowserFactory
                         break;
                     case "htmlunit":
                         if (driver == null) {
-                            driver = new HtmlUnitDriver();
+                            driver = new RemoteWebDriver(DesiredCapabilities.HtmlUnitWithJavaScript());
                         drivers.Add("htmlunit", driver);
                         }
                         break;
@@ -48,7 +51,7 @@ namespace AmazonTesting.BrowserFactory
       
         public WebDriverWait getWait()
         {
-            wait = new WebDriverWait(driver, 60);
+            wait = new WebDriverWait(driver,new TimeSpan(0,0,60));
             return wait;
         }
 
